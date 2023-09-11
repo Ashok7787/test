@@ -11,51 +11,68 @@ function FirstPage() {
   const [minimumAmount, setMinimumAmount] = useState("");
   const [maximumAmount, setMaximumAmount] = useState("");
   const [count, setCount] = useState(1);
-  let [newArray, setNewArray] = useState([]);
+  let [newArray, setNewArray] = useState({});
 
   const handelSubmit = (e) => {
-    e.preventDefault();   
-    const obj1 = {
+    e.preventDefault();  
+    setNewArray({
+      ...newArray,
       provider: provider,
-      operator: operator, 
-    data: [
-      {
-        "maximumAmount": maximumAmount ,
-        "minimumAmount": minimumAmount ,
-        "commissionType":commissionType,
-        "amount":amount,
-        "id": count,
-      },
-    ]};
-
-    setNewArray([...newArray, obj1]);
+      operator: operator,
+      data: [],
+    });
     console.log("values", operator, provider);
     setFirstDiv(true);
   };
   const handelSubmitSecond = (e) => {
     e.preventDefault();
-    setCount(count + 1);
-    const obj1 = {
+    setCount(count + 1);    
+    setNewArray({
+      ...newArray,
       provider: provider,
-      operator: operator, 
-    data: [
-      {
-        "maximumAmount": maximumAmount ,
-        "minimumAmount": minimumAmount ,
-        "commissionType":commissionType,
-        "amount":amount,
-        "id": count,
-      },
-    ]};
-    setNewArray([...newArray, obj1]);
-    console.log("values", maximumAmount,minimumAmount);
+      operator: operator,
+      data: [
+        {          
+          commissionType: commissionType,
+          amount: amount,
+          id: count,
+        },
+      ],
+    });
+    console.log("values", maximumAmount, minimumAmount);
     setSecondDiv(true);
   };
-console.log("newvalue",newArray);
+  const handelSubmitThird  = (e) => {
+    e.preventDefault();      
+    setNewArray({
+      ...newArray,
+      provider: provider,
+      operator: operator,
+      data: [
+        {
+          maximumAmount: maximumAmount,
+          minimumAmount: minimumAmount,
+          commissionType: commissionType,
+          amount: amount,
+          id: count,
+        },
+      ],
+    });
+    console.log("values", maximumAmount, minimumAmount);
+    setSecondDiv(true);
+  };
+  console.log("newvalue", newArray);
   const handelDelete = (id) => {
-    const updatedData = newArray.filter((item) => item.data.id !== id );
-    console.log("id",id);
-    setNewArray(updatedData);
+    const updatedData = newArray.data.filter((item) => item.id !== id);
+    setNewArray({
+      ...newArray,
+      provider: provider,
+      operator: operator,
+      data: updatedData,
+    });
+    console.log("id", id);
+    setFirstDiv(true);
+    setSecondDiv(false);
   };
 
   return (
@@ -209,7 +226,7 @@ console.log("newvalue",newArray);
                       />
                       <input
                         name="amount"
-                        onChange={(e)=> setMinimumAmount(e.target.value)}
+                        onChange={(e) => setMinimumAmount(e.target.value)}
                         value={minimumAmount}
                         className=" border border-blue-300"
                       />
@@ -226,7 +243,7 @@ console.log("newvalue",newArray);
                       <input
                         name="amount"
                         value={maximumAmount}
-                        onChange={(e)=> setMaximumAmount(e.target.value)}
+                        onChange={(e) => setMaximumAmount(e.target.value)}
                         className=" border border-blue-300"
                       />
                     </div>
@@ -259,20 +276,20 @@ console.log("newvalue",newArray);
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <button
                     //type="submit"
-                    onClick={handelSubmitSecond}
+                    onClick={handelSubmitThird}
                     className=" bg-blue-500 p-2 rounded-md"
                   >
                     Add
                   </button>
                 </div>
-
               </div>
             </div>
-            {newArray.map((item)=><>
+            {newArray && newArray.data.map((item) => (
+              <>
                 <div className="flex justify-between">
                   <div className=" flex gap-2">
                     <input type="radio" />
@@ -281,7 +298,7 @@ console.log("newvalue",newArray);
                   <div>
                     <button
                       className="bg-red-500 p-2 rounded-md"
-                      onClick={(e)=>handelDelete(item.id)}
+                      onClick={(e) => handelDelete(item.id)}
                     >
                       Delete
                     </button>
@@ -299,7 +316,7 @@ console.log("newvalue",newArray);
                       />
                       <input
                         name="amount"
-                        value={item.data.minimumAmount}
+                        value={item.minimumAmount}
                         className=" border border-blue-300"
                       />
                     </div>
@@ -314,7 +331,7 @@ console.log("newvalue",newArray);
                       />
                       <input
                         name="amount"
-                        value={item.data.maximumAmount}
+                        value={item.maximumAmount}
                         className=" border border-blue-300"
                       />
                     </div>
@@ -326,9 +343,11 @@ console.log("newvalue",newArray);
                     <label>Commission type</label>
                     <select
                       className=" border border-blue-300 w-40"
-                     // value={commissionType}
+                      // value={commissionType}
                     >
-                      <option value={item.data.commissionType}>{item.data.commissionType}</option>
+                      <option value={item.commissionType}>
+                        {item.commissionType}
+                      </option>
                     </select>
                   </div>
                   <div className=" flex flex-col">
@@ -341,12 +360,14 @@ console.log("newvalue",newArray);
                       />
                       <input
                         name="amount"
-                        value={item.data.amount}
+                        value={item.amount}
                         className=" border border-blue-300"
                       />
                     </div>
                   </div>
-                </div></>)}
+                </div>
+              </>
+            ))}
           </>
         ) : null}
       </div>
