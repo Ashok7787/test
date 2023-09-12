@@ -226,7 +226,7 @@ function FirstPage() {
           </form>
         ) : firstDiv && secondDiv && !lastDiv ? (
           <>
-            <form >
+            <form onSubmit={handelSubmitThird}>
               <div className="border shadow-sm m-5 p-2">
                 <div className=" flex justify-start mx-2 ">
                   <p className=" text-lg font-bold">Commission Update </p>
@@ -298,13 +298,7 @@ function FirstPage() {
                       </div>
                     </div>
                   </div>
-                  <div>                    
-                    {minimumAmount > maximumAmount ? (
-                      <h1>
-                        "Minimum Amount should be lessthan Maximum Amount"
-                      </h1>
-                    ) : null}
-                  </div>
+                  <div></div>
                   <div className=" flex gap-2">
                     <div className="w-1/2 flex flex-col">
                       <label>Commission type</label>
@@ -338,22 +332,13 @@ function FirstPage() {
                   </div>
 
                   <div>
-                  {minimumAmount > maximumAmount ? (
-                      <button
-                     // type="submit"
+                    <button
+                      type="submit"
                       // onClick={handelSubmitThird}
                       className=" bg-blue-500 p-2 rounded-md"
                     >
                       Add
                     </button>
-                    ) :  <button
-                    type="submit"
-                     onClick={handelSubmitThird}
-                    className=" bg-blue-500 p-2 rounded-md"
-                  >
-                    Add
-                  </button>}
-                   
                   </div>
                 </div>
               </div>
