@@ -7,9 +7,11 @@ function FirstPage() {
   const [secondDiv, setSecondDiv] = useState(false);
   const [lastDiv, setLastDiv] = useState(false);
   const [amount, setAmount] = useState("");
+  const [commissionPercent, setCommissionPercent] = useState("");
+  const [commissionAmount, setCommissionAmount] = useState("");
   const [commissionType, setCommissionType] = useState("percentage");
-  const [minimumAmount, setMinimumAmount] = useState("");
-  const [maximumAmount, setMaximumAmount] = useState("");
+  const [minimumAmount, setMinimumAmount] = useState(0);
+  const [maximumAmount, setMaximumAmount] = useState(0);
   const [count, setCount] = useState(1);
   let [newArray, setNewArray] = useState({});
   let [submitArray, setSubmitArray] = useState([]);
@@ -28,7 +30,13 @@ function FirstPage() {
   };
   const handelSubmitSecond = (e) => {
     e.preventDefault();
-
+    // setSubmitArray([
+    //   ...submitArray,
+    //   {
+    //     commissionAmount: commissionAmount,
+    //     commissionPercent: commissionPercent,
+    //   },
+    // ]);
     setNewArray({
       ...newArray,
       provider: provider,
@@ -38,8 +46,9 @@ function FirstPage() {
     setSecondDiv(true);
   };
   const handelSubmitThird = (e) => {
-    console.log("total", e.target.value);
     e.preventDefault();
+    console.log("data", minimumAmount, maximumAmount);
+
     setCount(count + 1);
 
     setSubmitArray([
@@ -50,12 +59,12 @@ function FirstPage() {
         commissionType: commissionType,
         amount: amount,
         id: count,
+        commissionAmount: commissionAmount,
+        commissionPercent: commissionPercent,
       },
     ]);
-   
 
     setSecondDiv(true);
-    console.log("third", submitArray);
   };
 
   const handelDelete = (id) => {
@@ -165,23 +174,43 @@ function FirstPage() {
                       <option value="amount">Amount</option>
                     </select>
                   </div>
-                  <div className=" flex flex-col">
-                    <label>{commissionType}</label>
-                    <div className="flex">
-                      <input
-                        value="Rs"
-                        disabled
-                        className=" bg-slate-300 items-center w-1/6"
-                      />
-                      <input
-                        name="amount"
-                        value={amount}
-                        required
-                        onChange={(e) => setAmount(e.target.value)}
-                        className=" border border-blue-300"
-                      />
+                  {commissionType === "percentage" ? (
+                    <div className=" flex flex-col">
+                      <label>Commission Percentage</label>
+                      <div className="flex">
+                        <input
+                          value="%"
+                          disabled
+                          className=" bg-slate-300 items-center w-1/6"
+                        />
+                        <input
+                          name="commissionPercent"
+                          value={commissionPercent}
+                          required
+                          onChange={(e) => setCommissionPercent(e.target.value)}
+                          className=" border border-blue-300"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className=" flex flex-col">
+                      <label>Commission Amount</label>
+                      <div className="flex">
+                        <input
+                          value="Rs"
+                          disabled
+                          className=" bg-slate-300 items-center w-1/6"
+                        />
+                        <input
+                          name="commissionAmount"
+                          value={commissionAmount}
+                          required
+                          onChange={(e) => setCommissionAmount(e.target.value)}
+                          className=" border border-blue-300"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <button
@@ -197,7 +226,7 @@ function FirstPage() {
           </form>
         ) : firstDiv && secondDiv && !lastDiv ? (
           <>
-            <form onSubmit={handelSubmitThird}>
+            <form >
               <div className="border shadow-sm m-5 p-2">
                 <div className=" flex justify-start mx-2 ">
                   <p className=" text-lg font-bold">Commission Update </p>
@@ -241,9 +270,11 @@ function FirstPage() {
                           className=" bg-slate-300 items-center w-1/6"
                         />
                         <input
-                          name="amount"
+                          name="minimumAmount"
+                          type="number"
                           onChange={(e) => setMinimumAmount(e.target.value)}
                           value={minimumAmount}
+                          required
                           className=" border border-blue-300"
                         />
                       </div>
@@ -257,15 +288,23 @@ function FirstPage() {
                           className=" bg-slate-300 items-center w-1/6"
                         />
                         <input
-                          name="amount"
+                          name="maximumAmount"
                           value={maximumAmount}
+                          required
+                          type="number"
                           onChange={(e) => setMaximumAmount(e.target.value)}
                           className=" border border-blue-300"
                         />
                       </div>
                     </div>
                   </div>
-
+                  <div>                    
+                    {minimumAmount > maximumAmount ? (
+                      <h1>
+                        "Minimum Amount should be lessthan Maximum Amount"
+                      </h1>
+                    ) : null}
+                  </div>
                   <div className=" flex gap-2">
                     <div className="w-1/2 flex flex-col">
                       <label>Commission type</label>
@@ -291,6 +330,7 @@ function FirstPage() {
                           name="amount"
                           onChange={(e) => setAmount(e.target.value)}
                           value={amount}
+                          required
                           className=" border border-blue-300"
                         />
                       </div>
@@ -298,13 +338,22 @@ function FirstPage() {
                   </div>
 
                   <div>
-                    <button
-                      type="submit"
+                  {minimumAmount > maximumAmount ? (
+                      <button
+                     // type="submit"
                       // onClick={handelSubmitThird}
                       className=" bg-blue-500 p-2 rounded-md"
                     >
                       Add
                     </button>
+                    ) :  <button
+                    type="submit"
+                     onClick={handelSubmitThird}
+                    className=" bg-blue-500 p-2 rounded-md"
+                  >
+                    Add
+                  </button>}
+                   
                   </div>
                 </div>
               </div>
