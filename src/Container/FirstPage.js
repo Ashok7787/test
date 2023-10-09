@@ -343,7 +343,7 @@ function FirstPage() {
                 </div>
               </div>
             </form>
-            <div>
+            <div className="p-2 border shadow-sm m-5">
               {submitArray.map((item) => (
                 <>
                   <div className="flex justify-between" key={item.id}>
